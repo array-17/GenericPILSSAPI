@@ -12,7 +12,7 @@ app = Flask(__name__)
 ##
 
 #API details for noughtIQ
-API_META = {"name": "AddAPI", "version": "0.4"}
+API_META = {"name": "AddAPI", "version": "0.6"}
 
 ActionClass = AddAction  # Placeholder for the Action class - configure this for your specific implementation
 if(ActionClass is None):
