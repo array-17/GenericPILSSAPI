@@ -5,11 +5,16 @@ import servicemanager
 import subprocess
 import sys
 import os
+from fork_config import (
+    svc_name_,
+    svc_display_name_,
+    svc_description_
+)
 
 class FlaskService(win32serviceutil.ServiceFramework):
-    _svc_name_ = "AddAppService"
-    _svc_display_name_ = "AddApp Flask App Service"
-    _svc_description_ = "Runs the AddApp Flask app as a Windows service."
+    _svc_name_ = svc_name_
+    _svc_display_name_ = svc_display_name_
+    _svc_description_ = svc_description_
 
     def __init__(self, args):
         super().__init__(args)

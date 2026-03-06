@@ -5,6 +5,11 @@ Put all fork-specific metadata and class selections in this file.
 `app.py` should remain stable and generally not require edits for normal forks.
 """
 
+
+svc_name_ = "AddAppService"
+svc_display_name_ = "AddApp Flask App Service"
+svc_description_ = "Runs the AddApp Flask app as a Windows service."
+
 from Add import AddAction, AddResults, AddTemplate, GraphResults, AddDownloadable
 
 # API details for NautIQ discovery
