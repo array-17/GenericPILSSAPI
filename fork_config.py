@@ -6,20 +6,20 @@ Put all fork-specific metadata and class selections in this file.
 """
 
 
-svc_name_ = "AddAppService"
-svc_display_name_ = "AddApp Flask App Service"
-svc_description_ = "Runs the AddApp Flask app as a Windows service."
+svc_name_ = "PILSSAppService"
+svc_display_name_ = "PILSS Flask App Service"
+svc_description_ = "Runs the PILSS Flask app as a Windows service."
 
-from Add import AddAction, AddResults, AddTemplate, GraphResults, AddDownloadable
+from Pilss import PILSSAction, PILSSResults, PILSSOnBottomTemplate, PILSSSchemaTemplate, PILSSDownloadable
 
 # API details for NautIQ discovery
-API_META = {"name": "AddAPI", "version": "0.6"}
+API_META = {"name": "PILSSAPI", "version": "0.6"}
 
 # Core runtime classes used by app.py
-ACTION_CLASS = AddAction
-RESULTS_CLASSES = [AddResults, GraphResults]
-TEMPLATE_CLASSES = [AddTemplate]
-DOWNLOADABLE_CLASS = AddDownloadable
+ACTION_CLASS = PILSSAction
+RESULTS_CLASSES = [PILSSResults]
+TEMPLATE_CLASSES = [PILSSOnBottomTemplate]
+DOWNLOADABLE_CLASS = PILSSDownloadable
 
 
 def validate_fork_config():
