@@ -1,0 +1,330 @@
+{
+  "projectID": {
+    "value": "Array17"
+  },
+  "revID": {
+    "value": "Revision 1"
+  },
+  "batchUUID": "666abf15-fed3-4246-beaf-e03ab1df950b",
+  "dateCreated": "2026-03-07T11:37:19.120364Z",
+  "apiVersion": "1.0",
+  "cases": [
+    {
+      "caseNumber": 0,
+      "caseStatus": "Queued",
+      "case_data": {
+        "CalculatedLayFactor_int": {
+          "value": 2
+        },
+        "D": {
+          "value": 5,
+          "units": "m"
+        },
+        "D_hydro": {
+          "value": null,
+          "units": "m"
+        },
+        "EI": {
+          "value": 0,
+          "units": "N\u00b7m\u00b2"
+        },
+        "ExplicitAcceleration": {
+          "value": false
+        },
+        "FH_m": {
+          "value": 0,
+          "units": "N/m"
+        },
+        "GenerateRegularWave": {
+          "value": 0
+        },
+        "Hs": {
+          "value": 0,
+          "units": "m"
+        },
+        "HydroModel": {
+          "value": 0
+        },
+        "HydrodynamicDiameter_int": {
+          "value": 0
+        },
+        "IncludeLiftReduction_int": {
+          "value": 0
+        },
+        "IncludeTrench_int": {
+          "value": 0
+        },
+        "InitialPenetrationModel": {
+          "value": 0
+        },
+        "MaxNrOfIterations": {
+          "value": 0
+        },
+        "Nc": {
+          "value": 0
+        },
+        "Phi_t": {
+          "value": 0,
+          "units": "deg"
+        },
+        "RampUpPeriod": {
+          "value": 0,
+          "units": "s"
+        },
+        "RampUp_int": {
+          "value": 0
+        },
+        "SmoothWaveVelocity": {
+          "value": 0
+        },
+        "SoilModel": {
+          "value": 1
+        },
+        "SpectrumPeakedness": {
+          "value": 1
+        },
+        "SpectrumSpecification": {
+          "value": 0
+        },
+        "St": {
+          "value": 0
+        },
+        "T": {
+          "value": 0,
+          "units": "s"
+        },
+        "T0": {
+          "value": 0,
+          "units": "N"
+        },
+        "Tp": {
+          "value": 2,
+          "units": "s"
+        },
+        "Tsim": {
+          "value": 0,
+          "units": "s"
+        },
+        "U_c": {
+          "value": 6,
+          "units": "m/s"
+        },
+        "U_m": {
+          "value": 0,
+          "units": "m/s"
+        },
+        "UserDefinedInitialPenetration_int": {
+          "value": 0
+        },
+        "UserDefinedLayFactor_int": {
+          "value": 0
+        },
+        "Version_number": {
+          "value": 0
+        },
+        "WaveOrder": {
+          "value": 0
+        },
+        "WaveVelRef_h": {
+          "value": 0,
+          "units": "m"
+        },
+        "alpha_brk": {
+          "value": 0
+        },
+        "alpha_m": {
+          "value": 0
+        },
+        "alpha_soil": {
+          "value": 0.3
+        },
+        "bitness": {
+          "value": 0
+        },
+        "caseName": {
+          "value": ""
+        },
+        "delta_mobilization": {
+          "value": 0
+        },
+        "delta_t": {
+          "value": 0,
+          "units": "s"
+        },
+        "delta_t_plot": {
+          "value": 0,
+          "units": "s"
+        },
+        "delta_t_res": {
+          "value": 0,
+          "units": "s"
+        },
+        "delta_t_signal": {
+          "value": 0,
+          "units": "s"
+        },
+        "depth": {
+          "value": 70,
+          "units": "m"
+        },
+        "flowtype": {
+          "value": 0
+        },
+        "gamma_mark": {
+          "value": 0,
+          "units": "N/m\u00b3"
+        },
+        "gamma_pre": {
+          "value": 0,
+          "units": "N/m\u00b3"
+        },
+        "gamma_total": {
+          "value": 0,
+          "units": "N/m\u00b3"
+        },
+        "generatePlots": {
+          "value": false
+        },
+        "k_lay_user": {
+          "value": 0
+        },
+        "k_soil": {
+          "value": 65000,
+          "units": "N/m/m"
+        },
+        "kappa_active": {
+          "value": 0
+        },
+        "kappa_passive": {
+          "value": 0
+        },
+        "m": {
+          "value": 230,
+          "units": "kg/m"
+        },
+        "m_OCR": {
+          "value": 0
+        },
+        "mu": {
+          "value": 1
+        },
+        "n_spreading": {
+          "value": 0
+        },
+        "numseeds": {
+          "value": 5
+        },
+        "postproc": {
+          "value": 0
+        },
+        "printToFile": {
+          "value": 0
+        },
+        "r_H": {
+          "value": 0
+        },
+        "r_L": {
+          "value": 0
+        },
+        "readWaveVelFromFile": {
+          "value": 0
+        },
+        "remoulded_int": {
+          "value": 0
+        },
+        "rho_su": {
+          "value": 0,
+          "units": "kPa/m"
+        },
+        "rho_w": {
+          "value": 0,
+          "units": "kg/m\u00b3"
+        },
+        "roughness": {
+          "value": 0
+        },
+        "seedArray_crest": {
+          "value": [
+            "56754",
+            "23453",
+            "57996",
+            "35647",
+            "54322",
+            "57806"
+          ]
+        },
+        "seedArray_phase": {
+          "value": [
+            "65432",
+            "67896",
+            "56897",
+            "09868",
+            "34543"
+          ]
+        },
+        "su": {
+          "value": 1,
+          "units": "kPa"
+        },
+        "su_active": {
+          "value": 0,
+          "units": "kPa"
+        },
+        "su_passive": {
+          "value": 0,
+          "units": "kPa"
+        },
+        "su_sigmav_NC": {
+          "value": 0
+        },
+        "su_z0": {
+          "value": 0,
+          "units": "kPa"
+        },
+        "suction_int": {
+          "value": 0
+        },
+        "t_mgrt": {
+          "value": 0.24,
+          "units": "m"
+        },
+        "t_start": {
+          "value": 0,
+          "units": "s"
+        },
+        "theta_t": {
+          "value": 0,
+          "units": "deg"
+        },
+        "theta_w": {
+          "value": 0,
+          "units": "deg"
+        },
+        "w_s": {
+          "value": 12,
+          "units": "N/m"
+        },
+        "w_s_i": {
+          "value": 0,
+          "units": "N/m"
+        },
+        "w_s_w": {
+          "value": 0,
+          "units": "N/m"
+        },
+        "waterFilled_int": {
+          "value": 0
+        },
+        "z_ini_user": {
+          "value": 0,
+          "units": "m"
+        },
+        "z_t": {
+          "value": 0,
+          "units": "m"
+        },
+        "dateRun": "2026-03-07T11:37:22.610206Z"
+      }
+    }
+  ]
+}

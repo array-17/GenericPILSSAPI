@@ -195,7 +195,9 @@ class PILSSAction(BaseAction):
                     "caseName": {
                         "type": "string",
                         "title": "Case Name",
-                        "description": "Identifier for this PILSS analysis case"
+                        "description": "Identifier for this PILSS analysis case",
+                        "x-Category": "General Settings",
+                        "default": "PILSS_Case"
                     },
                     "Version_number": {
                         "type": "integer",
@@ -204,7 +206,9 @@ class PILSSAction(BaseAction):
                         "Options": {
                             "1.0": 1,
                             "2.2": 2
-                        }
+                        },
+                        "x-Category": "General Settings",
+                        "default": 2
                     },
                     "bitness": {
                         "type": "integer",
@@ -213,7 +217,9 @@ class PILSSAction(BaseAction):
                         "Options": {
                             "64-Bit": 64,
                             "32-bit": 32
-                        }
+                        },
+                        "x-Category": "General Settings",
+                        "default": 64
                     },
                     "postproc": {
                         "type": "integer",
@@ -222,7 +228,9 @@ class PILSSAction(BaseAction):
                         "Options": {
                             "Yes": 1,
                             "No": 2
-                        }
+                        },
+                        "x-Category": "General Settings",
+                        "default": 2
                     },
 
                     # Cross Section Parameters
@@ -230,65 +238,87 @@ class PILSSAction(BaseAction):
                         "type": "number",
                         "title": "Hydrodynamic Diameter",
                         "description": "Hydrodynamic diameter for drag calculations",
-                        "x-units": "m"
+                        "x-units": "m",
+                        "x-Category": "Cross Section Parameters",
+                        "default": 0.4033
                     },
                     "D": {
                         "type": "number",
                         "title": "Pipe Diameter",
                         "description": "Outer diameter of the pipeline",
-                        "x-units": "m"
+                        "x-units": "m",
+                        "x-Category": "Cross Section Parameters",
+                        "default": 0.4033
                     },
                     "w_s": {
                         "type": "number",
                         "title": "Submerged Weight",
                         "description": "Submerged weight per unit length",
-                        "x-units": "N/m"
+                        "x-units": "N/m",
+                        "x-Category": "Cross Section Parameters",
+                        "default": 484.76
                     },
                     "w_s_i": {
                         "type": "number",
                         "title": "Submerged Weight (Installation)",
                         "description": "Submerged weight per unit length (installation condition)",
-                        "x-units": "N/m"
+                        "x-units": "N/m",
+                        "x-Category": "Cross Section Parameters",
+                        "default": 484.76
                     },
                     "w_s_w": {
                         "type": "number",
                         "title": "Submerged Weight (Waterfilled)",
                         "description": "Submerged weight per unit length in water-filled condition",
-                        "x-units": "N/m"
+                        "x-units": "N/m",
+                        "x-Category": "Cross Section Parameters",
+                        "default": 484.76
                     },
                     "m": {
                         "type": "number",
                         "title": "Mass per Unit Length",
                         "description": "Total mass per unit length of pipe",
-                        "x-units": "kg/m"
+                        "x-units": "kg/m",
+                        "x-Category": "Cross Section Parameters",
+                        "default": 180.74
                     },
                     "t_mgrt": {
                         "type": "number",
                         "title": "Marine Growth Thickness",
                         "description": "Thickness of marine growth on the pipe",
-                        "x-units": "m"
+                        "x-units": "m",
+                        "x-Category": "Cross Section Parameters",
+                        "default": 0.0
                     },
                     "k_lay_user": {
                         "type": "number",
                         "title": "Lay Factor",
-                        "description": "User-defined lay tension factor"
+                        "description": "User-defined lay tension factor",
+                        "x-Category": "Cross Section Parameters",
+                        "default": 1.0
                     },
                     "EI": {
                         "type": "number",
                         "title": "Bending Stiffness",
                         "description": "Flexural rigidity of the pipeline",
-                        "x-units": "N·m²"
+                        "x-units": "N·m²",
+                        "x-Category": "Cross Section Parameters",
+                        "default": 0.0
                     },
                     "T0": {
                         "type": "number",
                         "title": "Lay Tension (Horizontal)",
                         "description": "Lay tension — horizontal component",
-                        "x-units": "N"
+                        "x-units": "N",
+                        "x-Category": "Cross Section Parameters",
+                        "default": 0.0
                     },
                     "alpha_m": {
                         "type": "number",
                         "title": "Mass Coefficient Alpha",
-                        "description": "Mass coefficient for dynamic analysis"
+                        "description": "Mass coefficient for dynamic analysis",
+                        "x-Category": "Cross Section Parameters",
+                        "default": 0.0
                     },
 
                     # Hydrodynamic Parameters
@@ -296,93 +326,125 @@ class PILSSAction(BaseAction):
                         "type": "number",
                         "title": "Water Density",
                         "description": "Density of seawater",
-                        "x-units": "kg/m³"
+                        "x-units": "kg/m³",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 1028.0
                     },
                     "U_m": {
                         "type": "number",
                         "title": "Flow Velocity Amplitude",
                         "description": "Flow velocity amplitude (used for regular waves)",
-                        "x-units": "m/s"
+                        "x-units": "m/s",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 0.0
                     },
                     "T": {
                         "type": "number",
                         "title": "Wave Period",
                         "description": "Wave period for regular waves",
-                        "x-units": "s"
+                        "x-units": "s",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 0.0
                     },
                     "U_c": {
                         "type": "number",
                         "title": "Current Velocity",
                         "description": "Steady current velocity at reference height",
-                        "x-units": "m/s"
+                        "x-units": "m/s",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 0.358
                     },
                     "Phi_t": {
                         "type": "number",
                         "title": "Phase Angle",
                         "description": "Phase angle for wave analysis",
-                        "x-units": "deg"
+                        "x-units": "deg",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 0.0
                     },
                     "FH_m": {
                         "type": "number",
                         "title": "Mean Horizontal Force",
                         "description": "Mean horizontal hydrodynamic force",
-                        "x-units": "N/m"
+                        "x-units": "N/m",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 0.0
                     },
                     "depth": {
                         "type": "number",
                         "title": "Water Depth",
                         "description": "Water depth at site",
-                        "x-units": "m"
+                        "x-units": "m",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 108.0
                     },
                     "Tsim": {
                         "type": "integer",
                         "title": "Simulation Duration",
                         "description": "Total simulation time",
-                        "x-units": "s"
+                        "x-units": "s",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 10800
                     },
                     "WaveVelRef_h": {
                         "type": "number",
                         "title": "Wave Velocity Reference Height",
                         "description": "Reference height for wave velocity calculations",
-                        "x-units": "m"
+                        "x-units": "m",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 0.20165
                     },
                     "Hs": {
                         "type": "number",
                         "title": "Significant Wave Height",
                         "description": "Significant wave height (H_s or H_1/3)",
-                        "x-units": "m"
+                        "x-units": "m",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 14.3
                     },
                     "Tp": {
                         "type": "number",
                         "title": "Peak Period",
                         "description": "Spectral peak period",
-                        "x-units": "s"
+                        "x-units": "s",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 15.80
                     },
                     "SpectrumPeakedness": {
                         "type": "number",
                         "title": "Spectrum Peakedness",
-                        "description": "Peakedness parameter (gamma) for JONSWAP spectrum"
+                        "description": "Peakedness parameter (gamma) for JONSWAP spectrum",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 3.30
                     },
                     "theta_w": {
                         "type": "number",
                         "title": "Wave Direction",
                         "description": "Mean wave direction relative to pipeline",
-                        "x-units": "deg"
+                        "x-units": "deg",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 90.0
                     },
                     "n_spreading": {
                         "type": "number",
                         "title": "Directional Spreading",
-                        "description": "Directional spreading exponent"
+                        "description": "Directional spreading exponent",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 8.0
                     },
                     "r_H": {
                         "type": "number",
                         "title": "High-Frequency Factor",
-                        "description": "High-frequency reduction factor"
+                        "description": "High-frequency reduction factor",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 1.0
                     },
                     "r_L": {
                         "type": "number",
                         "title": "Low-Frequency Factor",
-                        "description": "Low-frequency reduction factor"
+                        "description": "Low-frequency reduction factor",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 1.0
                     },
                     "HydroModel": {
                         "type": "integer",
@@ -394,7 +456,9 @@ class PILSSAction(BaseAction):
                             "Model 3": 3,
                             "Database (4)": 4,
                             "Horizontal Sine (5)": 5
-                        }
+                        },
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 4
                     },
                     "flowtype": {
                         "type": "integer",
@@ -404,7 +468,9 @@ class PILSSAction(BaseAction):
                             "Steady": 1,
                             "Oscillatory": 2,
                             "Combined": 3
-                        }
+                        },
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 1
                     },
                     "roughness": {
                         "type": "integer",
@@ -414,7 +480,9 @@ class PILSSAction(BaseAction):
                             "Smooth (1)": 1,
                             "Rough (2)": 2,
                             "Very Rough (3)": 3
-                        }
+                        },
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 2
                     },
                     "GenerateRegularWave": {
                         "type": "integer",
@@ -423,7 +491,9 @@ class PILSSAction(BaseAction):
                         "Options": {
                             "Regular (1)": 1,
                             "Irregular (2)": 2
-                        }
+                        },
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 2
                     },
                     "SmoothWaveVelocity": {
                         "type": "integer",
@@ -432,7 +502,9 @@ class PILSSAction(BaseAction):
                         "Options": {
                             "Yes (1)": 1,
                             "No (2)": 2
-                        }
+                        },
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 2
                     },
                     "WaveOrder": {
                         "type": "integer",
@@ -441,7 +513,9 @@ class PILSSAction(BaseAction):
                         "Options": {
                             "Linear (1)": 1,
                             "Second Order (2)": 2
-                        }
+                        },
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 1
                     },
                     "SpectrumSpecification": {
                         "type": "integer",
@@ -451,12 +525,16 @@ class PILSSAction(BaseAction):
                             "JONSWAP (1)": 1,
                             "PM (2)": 2,
                             "Other (3)": 3
-                        }
+                        },
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 1
                     },
                     "numseeds": {
                         "type": "integer",
                         "title": "Number of Seeds",
-                        "description": "Number of random phase realizations"
+                        "description": "Number of random phase realizations",
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 5
                     },
                     "HydrodynamicDiameter_int": {
                         "type": "integer",
@@ -465,7 +543,9 @@ class PILSSAction(BaseAction):
                         "Options": {
                             "Yes": 1,
                             "No": 2
-                        }
+                        },
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 2
                     },
                     "IncludeLiftReduction_int": {
                         "type": "integer",
@@ -474,7 +554,9 @@ class PILSSAction(BaseAction):
                         "Options": {
                             "Yes": 1,
                             "No": 2
-                        }
+                        },
+                        "x-Category": "Hydrodynamic Parameters",
+                        "default": 2
                     },
 
                     # Random Seeds
@@ -482,13 +564,17 @@ class PILSSAction(BaseAction):
                         "type": "array",
                         "items": {"type": "integer"},
                         "title": "Phase Seeds",
-                        "description": "Random seeds for wave phase generation"
+                        "description": "Random seeds for wave phase generation",
+                        "x-Category": "Random Seeds",
+                        "default": [81663, 2142, 56225, 24849, 29681]
                     },
                     "seedArray_crest": {
                         "type": "array",
                         "items": {"type": "integer"},
                         "title": "Crest Seeds",
-                        "description": "Random seeds for wave crest generation"
+                        "description": "Random seeds for wave crest generation",
+                        "x-Category": "Random Seeds",
+                        "default": [36657, 36657, 36657, 36657, 36657]
                     },
 
                     # Soil Parameters
@@ -496,123 +582,167 @@ class PILSSAction(BaseAction):
                         "type": "number",
                         "title": "Soil Stiffness",
                         "description": "Elastic stiffness of the soil (recommended ~65000 N/m/m)",
-                        "x-units": "N/m/m"
+                        "x-units": "N/m/m",
+                        "x-Category": "Soil Parameters",
+                        "default": 65000.0
                     },
                     "mu": {
                         "type": "number",
                         "title": "Friction Coefficient",
-                        "description": "Pipe-soil friction coefficient"
+                        "description": "Pipe-soil friction coefficient",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.6
                     },
                     "gamma_mark": {
                         "type": "number",
                         "title": "Submerged Soil Unit Weight",
                         "description": "Submerged unit weight of soil",
-                        "x-units": "N/m³"
+                        "x-units": "N/m³",
+                        "x-Category": "Soil Parameters",
+                        "default": 10212.0
                     },
                     "rho_su": {
                         "type": "number",
                         "title": "Undrained Shear Strength Gradient",
                         "description": "Gradient of undrained shear strength with depth",
-                        "x-units": "kPa/m"
+                        "x-units": "kPa/m",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "Nc": {
                         "type": "number",
                         "title": "Bearing Capacity Factor",
-                        "description": "Bearing capacity factor for soil"
+                        "description": "Bearing capacity factor for soil",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "su_z0": {
                         "type": "number",
                         "title": "Surface Undrained Shear Strength",
                         "description": "Undrained shear strength at mudline",
-                        "x-units": "kPa"
+                        "x-units": "kPa",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "delta_mobilization": {
                         "type": "number",
                         "title": "Mobilization Distance",
-                        "description": "Mobilization distance expressed as fraction of pipe-soil contact width B (dimensionless)"
+                        "description": "Mobilization distance expressed as fraction of pipe-soil contact width B (dimensionless)",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "St": {
                         "type": "number",
                         "title": "Sensitivity",
-                        "description": "Soil sensitivity (remoulded strength ratio)"
+                        "description": "Soil sensitivity (remoulded strength ratio)",
+                        "x-Category": "Soil Parameters",
+                        "default": 1.0
                     },
                     "alpha_soil": {
                         "type": "number",
                         "title": "Soil Alpha",
-                        "description": "Soil parameter alpha"
+                        "description": "Soil parameter alpha",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.02
                     },
                     "su_sigmav_NC": {
                         "type": "number",
                         "title": "Normalized Shear Strength (NC)",
-                        "description": "Normalized undrained shear strength for normally consolidated soil"
+                        "description": "Normalized undrained shear strength for normally consolidated soil",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "alpha_brk": {
                         "type": "number",
                         "title": "Breakout Alpha",
-                        "description": "Alpha factor for breakout calculation"
+                        "description": "Alpha factor for breakout calculation",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "gamma_pre": {
                         "type": "number",
                         "title": "Preconsolidation Unit Weight",
                         "description": "Unit weight for preconsolidation calculation",
-                        "x-units": "N/m³"
+                        "x-units": "N/m³",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "m_OCR": {
                         "type": "number",
                         "title": "OCR Exponent",
-                        "description": "Exponent for overconsolidation ratio calculation"
+                        "description": "Exponent for overconsolidation ratio calculation",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "kappa_active": {
                         "type": "number",
                         "title": "Active Earth Pressure Coefficient",
-                        "description": "Active lateral earth pressure coefficient"
+                        "description": "Active lateral earth pressure coefficient",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "kappa_passive": {
                         "type": "number",
                         "title": "Passive Earth Pressure Coefficient",
-                        "description": "Passive lateral earth pressure coefficient"
+                        "description": "Passive lateral earth pressure coefficient",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "su_active": {
                         "type": "number",
                         "title": "Active Shear Strength",
                         "description": "Undrained shear strength for active case",
-                        "x-units": "kPa"
+                        "x-units": "kPa",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "su_passive": {
                         "type": "number",
                         "title": "Passive Shear Strength",
                         "description": "Undrained shear strength for passive case",
-                        "x-units": "kPa"
+                        "x-units": "kPa",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "gamma_total": {
                         "type": "number",
                         "title": "Total Soil Unit Weight",
                         "description": "Total unit weight of soil",
-                        "x-units": "N/m³"
+                        "x-units": "N/m³",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "su": {
                         "type": "number",
                         "title": "Undrained Shear Strength",
                         "description": "Constant undrained shear strength",
-                        "x-units": "kPa"
+                        "x-units": "kPa",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "z_ini_user": {
                         "type": "number",
                         "title": "Initial Penetration (User)",
                         "description": "User-defined initial penetration depth",
-                        "x-units": "m"
+                        "x-units": "m",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "z_t": {
                         "type": "number",
                         "title": "Trench Depth",
                         "description": "Depth of seabed trench",
-                        "x-units": "m"
+                        "x-units": "m",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "theta_t": {
                         "type": "number",
                         "title": "Trench Angle",
                         "description": "Side slope angle of trench",
-                        "x-units": "deg"
+                        "x-units": "deg",
+                        "x-Category": "Soil Parameters",
+                        "default": 0.0
                     },
                     "SoilModel": {
                         "type": "integer",
@@ -622,55 +752,73 @@ class PILSSAction(BaseAction):
                             "Coulomb (1)": 1,
                             "Pipe-sand (2)": 2,
                             "Pipe-clay (3)": 3
-                        }
+                        },
+                        "x-Category": "Soil Parameters",
+                        "default": 2
                     },
                     "CalculatedLayFactor_int": {
                         "type": "integer",
                         "title": "Calculate Lay Factor",
                         "description": "Calculate lay factor automatically (1=yes, 2=no)",
-                        "Options": {"Yes": 1, "No": 2}
+                        "Options": {"Yes": 1, "No": 2},
+                        "x-Category": "Soil Parameters",
+                        "default": 2
                     },
                     "UserDefinedLayFactor_int": {
                         "type": "integer",
                         "title": "User-Defined Lay Factor",
                         "description": "Use user-defined lay factor (1=yes, 2=no)",
-                        "Options": {"Yes": 1, "No": 2}
+                        "Options": {"Yes": 1, "No": 2},
+                        "x-Category": "Soil Parameters",
+                        "default": 2
                     },
                     "InitialPenetrationModel": {
                         "type": "integer",
                         "title": "Initial Penetration Model",
                         "description": "Model for initial penetration (1=Verley & Lund, 2=SAFEBUCK, 3=Geotechnical)",
-                        "Options": {"Verley & Lund (1)": 1, "SAFEBUCK (2)": 2, "Geotechnical (3)": 3}
+                        "Options": {"Verley & Lund (1)": 1, "SAFEBUCK (2)": 2, "Geotechnical (3)": 3},
+                        "x-Category": "Soil Parameters",
+                        "default": 1
                     },
                     "remoulded_int": {
                         "type": "integer",
                         "title": "Include Remoulding",
                         "description": "Account for soil remoulding (1=yes, 2=no)",
-                        "Options": {"Yes": 1, "No": 2}
+                        "Options": {"Yes": 1, "No": 2},
+                        "x-Category": "Soil Parameters",
+                        "default": 2
                     },
                     "suction_int": {
                         "type": "integer",
                         "title": "Include Suction",
                         "description": "Include suction forces (1=yes, 2=no)",
-                        "Options": {"Yes": 1, "No": 2}
+                        "Options": {"Yes": 1, "No": 2},
+                        "x-Category": "Soil Parameters",
+                        "default": 2
                     },
                     "waterFilled_int": {
                         "type": "integer",
                         "title": "Water-Filled Pipe",
                         "description": "Pipe is water-filled (1=yes, 2=no)",
-                        "Options": {"Yes": 1, "No": 2}
+                        "Options": {"Yes": 1, "No": 2},
+                        "x-Category": "Soil Parameters",
+                        "default": 2
                     },
                     "UserDefinedInitialPenetration_int": {
                         "type": "integer",
                         "title": "User-Defined Initial Penetration",
                         "description": "Use user-defined initial penetration (1=yes, 2=no)",
-                        "Options": {"Yes": 1, "No": 2}
+                        "Options": {"Yes": 1, "No": 2},
+                        "x-Category": "Soil Parameters",
+                        "default": 2
                     },
                     "IncludeTrench_int": {
                         "type": "integer",
                         "title": "Include Trench",
                         "description": "Include seabed trench (1=yes, 2=no)",
-                        "Options": {"Yes": 1, "No": 2}
+                        "Options": {"Yes": 1, "No": 2},
+                        "x-Category": "Soil Parameters",
+                        "default": 2
                     },
 
                     # Time Series Parameters
@@ -678,31 +826,41 @@ class PILSSAction(BaseAction):
                         "type": "number",
                         "title": "Start Time",
                         "description": "Simulation start time",
-                        "x-units": "s"
+                        "x-units": "s",
+                        "x-Category": "Time Series Parameters",
+                        "default": 0.0
                     },
                     "delta_t": {
                         "type": "number",
                         "title": "Time Step",
                         "description": "Time step for main simulation",
-                        "x-units": "s"
+                        "x-units": "s",
+                        "x-Category": "Time Series Parameters",
+                        "default": 0.01
                     },
                     "delta_t_signal": {
                         "type": "number",
                         "title": "Signal Time Step",
                         "description": "Time step for signal output",
-                        "x-units": "s"
+                        "x-units": "s",
+                        "x-Category": "Time Series Parameters",
+                        "default": 0.35
                     },
                     "delta_t_res": {
                         "type": "number",
                         "title": "Results Time Step",
                         "description": "Time step for results output",
-                        "x-units": "s"
+                        "x-units": "s",
+                        "x-Category": "Time Series Parameters",
+                        "default": 1.0
                     },
                     "delta_t_plot": {
                         "type": "number",
                         "title": "Plot Time Step",
                         "description": "Time step for plot data output",
-                        "x-units": "s"
+                        "x-units": "s",
+                        "x-Category": "Time Series Parameters",
+                        "default": 1.0
                     },
 
                     # Dynamic Solution Parameters
@@ -710,18 +868,24 @@ class PILSSAction(BaseAction):
                         "type": "number",
                         "title": "Ramp-Up Period",
                         "description": "Duration of force ramp-up at start",
-                        "x-units": "s"
+                        "x-units": "s",
+                        "x-Category": "Dynamic Solution Parameters",
+                        "default": 0.0
                     },
                     "MaxNrOfIterations": {
                         "type": "integer",
                         "title": "Max Iterations",
-                        "description": "Maximum number of iterations per time step"
+                        "description": "Maximum number of iterations per time step",
+                        "x-Category": "Dynamic Solution Parameters",
+                        "default": 10
                     },
                     "RampUp_int": {
                         "type": "integer",
                         "title": "Enable Ramp-Up",
                         "description": "Enable ramp-up (1=yes, 2=no)",
-                        "Options": {"Yes": 1, "No": 2}
+                        "Options": {"Yes": 1, "No": 2},
+                        "x-Category": "Dynamic Solution Parameters",
+                        "default": 2
                     },
 
                     # Output Options
@@ -733,29 +897,36 @@ class PILSSAction(BaseAction):
                             "All (1)": 1,
                             "None (2)": 2,
                             "Summary Only (3)": 3
-                        }
+                        },
+                        "x-Category": "Output Options",
+                        "default": 1
                     },
                     "readWaveVelFromFile": {
                         "type": "integer",
                         "title": "Read Wave Velocity from File",
                         "description": "Read wave velocities from file (1=yes, 2=no)",
-                        "Options": {"Yes": 1, "No": 2}
+                        "Options": {"Yes": 1, "No": 2},
+                        "x-Category": "Output Options",
+                        "default": 2
                     },
                     "generatePlots": {
                         "type": "boolean",
                         "title": "Generate Plots",
-                        "description": "Generate result plots"
+                        "description": "Generate result plots",
+                        "x-Category": "Output Options",
+                        "default": False
                     },
                     "ExplicitAcceleration": {
                         "type": "boolean",
                         "title": "Explicit Acceleration",
                         "description": "Use explicit acceleration calculation",
-                        "Options": {"Yes": True, "No": False}
+                        "Options": {"Yes": True, "No": False},
+                        "x-Category": "Output Options",
+                        "default": True
                     }
                 },
                 "required": []
-            }
-            return schema
+            }return schema
 
     def perform_action(self) -> Dict[str, Any]:
             def create_fortran_string_buffer(py_string):
