@@ -23,24 +23,25 @@ DOWNLOADABLE_CLASS = PILSSDownloadable
 
 
 def validate_fork_config():
-    if ACTION_CLASS is None:
-        raise Exception("No ACTION_CLASS defined in fork_config.py")
-    if not hasattr(ACTION_CLASS, "perform_action"):
-        raise Exception("ACTION_CLASS does not have perform_action method defined")
-    if not callable(getattr(ACTION_CLASS, "perform_action")):
-        raise Exception("ACTION_CLASS.perform_action is not callable")
+    # ACTION_CLASS may be None for template-only APIs
+    if ACTION_CLASS is not None:
+        if not hasattr(ACTION_CLASS, "perform_action"):
+            raise Exception("ACTION_CLASS does not have perform_action method defined")
+        if not callable(getattr(ACTION_CLASS, "perform_action")):
+            raise Exception("ACTION_CLASS.perform_action is not callable")
 
-    if RESULTS_CLASSES is None or len(RESULTS_CLASSES) == 0:
-        raise Exception("No RESULTS_CLASSES defined in fork_config.py")
-    for result_class in RESULTS_CLASSES:
-        if not hasattr(result_class, "process_results"):
-            raise Exception(
-                f"Results class {result_class.__name__} does not have process_results method defined"
-            )
-        if not callable(getattr(result_class, "process_results")):
-            raise Exception(
-                f"Results class {result_class.__name__}.process_results is not callable"
-            )
+        # RESULTS_CLASSES required when ACTION_CLASS is set
+        if RESULTS_CLASSES is None or len(RESULTS_CLASSES) == 0:
+            raise Exception("No RESULTS_CLASSES defined in fork_config.py (required when ACTION_CLASS is set)")
+        for result_class in RESULTS_CLASSES:
+            if not hasattr(result_class, "process_results"):
+                raise Exception(
+                    f"Results class {result_class.__name__} does not have process_results method defined"
+                )
+            if not callable(getattr(result_class, "process_results")):
+                raise Exception(
+                    f"Results class {result_class.__name__}.process_results is not callable"
+                )
 
     if TEMPLATE_CLASSES is None:
         raise Exception("TEMPLATE_CLASSES must be defined in fork_config.py")
@@ -56,5 +57,6 @@ def validate_fork_config():
                 f"Template class {template_class.__name__} must define toFrontend_parameters or to_frontend_parameters"
             )
 
-    if DOWNLOADABLE_CLASS is None:
-        raise Exception("DOWNLOADABLE_CLASS must be defined in fork_config.py")
+    # DOWNLOADABLE_CLASS may be None for template-only APIs
+    if ACTION_CLASS is not None and DOWNLOADABLE_CLASS is None:
+        raise Exception("DOWNLOADABLE_CLASS must be defined in fork_config.py when ACTION_CLASS is set")

@@ -10,6 +10,7 @@ from fork_config import (
     TEMPLATE_CLASSES,
     DOWNLOADABLE_CLASS,
     validate_fork_config,
+    template_tags
 )
 
 app = Flask(__name__)
@@ -25,11 +26,16 @@ ResultsClasses = RESULTS_CLASSES
 TemplateClasses = TEMPLATE_CLASSES
 
 
+def _jobs_not_supported():
+    from flask import jsonify
+    return jsonify({"error": "This API is template-only and does not support jobs"}), 501
 
-#Start the Job Runner
-job_runner = JobRunner(ActionClass, ResultsClasses)
-job_runner_thread = threading.Thread(target=job_runner.run_loop, daemon=True)
-job_runner_thread.start()
+
+#Start the Job Runner (only when an ActionClass is configured)
+if ActionClass is not None:
+    job_runner = JobRunner(ActionClass, ResultsClasses)
+    job_runner_thread = threading.Thread(target=job_runner.run_loop, daemon=True)
+    job_runner_thread.start()
 
 @app.route('/', methods=['GET'])
 def index():
@@ -43,6 +49,8 @@ def get_api_meta():
 
 @app.route('/Jobs/schema', methods=['GET'])
 def get_job_schema():
+    if ActionClass is None:
+        return _jobs_not_supported()
     #Returns the JSON schema for job creation
     job_instance = jobClass(ActionClass=ActionClass, ResultsClasses=ResultsClasses)
     class_schema = job_instance.get_job_schema()
@@ -51,6 +59,8 @@ def get_job_schema():
 
 @app.route('/Jobs/create', methods=['POST'])
 def create_job():
+    if ActionClass is None:
+        return _jobs_not_supported()
     job_parameters = request.get_json()
     # Validate job_parameters against a predefined schema
     project_id = job_parameters.get('projectID', '1')
@@ -62,6 +72,8 @@ def create_job():
 
 @app.route('/Jobs/<batchUUID>/cases', methods=['GET'])
 def get_job_cases(batchUUID):
+    if ActionClass is None:
+        return _jobs_not_supported()
     if not UUIDExists(batchUUID):
         return jsonify({"error": "Batch UUID does not exist"}), 404
     job_instance = jobClass(ActionClass=ActionClass, ResultsClasses=ResultsClasses)
@@ -76,6 +88,8 @@ def get_job_cases(batchUUID):
 
 @app.route('/Jobs/<batchUUID>', methods=['GET'])
 def getAllJobs():
+    if ActionClass is None:
+        return _jobs_not_supported()
     import os
     jobs_folder = "results"
     all_jobs = []
@@ -90,6 +104,8 @@ def getAllJobs():
 #GetJobsByProjectID
 @app.route('/Jobs/project/<ProjectID>', methods=['GET'])
 def getAllJobsByProjectID(ProjectID):
+    if ActionClass is None:
+        return _jobs_not_supported()
     import os
     jobs_folder = "results"
     all_jobs = []
@@ -104,6 +120,8 @@ def getAllJobsByProjectID(ProjectID):
 #getjobsbyrevid
 @app.route('/Jobs/rev/<rev_id>', methods=['GET'])
 def getAllJobsByRevID(rev_id):
+    if ActionClass is None:
+        return _jobs_not_supported()
     import os
     jobs_folder = "results"
     all_jobs = []
@@ -119,6 +137,8 @@ def getAllJobsByRevID(rev_id):
 
 @app.route('/Jobs/<batchUUID>/start', methods=['POST'])
 def start_job(batchUUID):
+    if ActionClass is None:
+        return _jobs_not_supported()
     if not UUIDExists(batchUUID):
         return jsonify({"error": "Batch UUID does not exist"}), 404
     job_instance = jobClass(ActionClass=ActionClass, ResultsClasses=ResultsClasses)
@@ -129,6 +149,8 @@ def start_job(batchUUID):
 
 @app.route('/Jobs/<batchUUID>/status', methods=['GET'])
 def job_status(batchUUID):
+    if ActionClass is None:
+        return _jobs_not_supported()
     if not UUIDExists(batchUUID):
         return jsonify({"error": "Batch UUID does not exist"}), 404
     job_instance = jobClass(ActionClass=ActionClass, ResultsClasses=ResultsClasses)
@@ -143,6 +165,8 @@ def job_status(batchUUID):
 
 @app.route('/Jobs/<batchUUID>/results', methods=['GET'])
 def job_results(batchUUID):
+    if ActionClass is None:
+        return _jobs_not_supported()
     if not UUIDExists(batchUUID):
         return jsonify({"error": "Batch UUID does not exist"}), 404
     job_instance = jobClass(ActionClass=ActionClass, ResultsClasses=ResultsClasses)
@@ -166,6 +190,8 @@ def get_result_types():
 
 @app.route('/Jobs/<batchUUID>/cases/<int:caseNumber>/results/<resultType>', methods=['GET'])
 def case_result(batchUUID, caseNumber, resultType):
+    if ActionClass is None:
+        return _jobs_not_supported()
     if not UUIDExists(batchUUID):
         return jsonify({"error": "Batch UUID does not exist"}), 404
     job_instance = jobClass(ActionClass=ActionClass, ResultsClasses=ResultsClasses)
@@ -189,6 +215,12 @@ def case_result(batchUUID, caseNumber, resultType):
         return processed_results
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/Template/Tags' , methods=['GET'])
+def get_template_tags():
+    #Returns a list of strings that are associated with this API.  Used to help recomend APi's to users.
+    tags = template_tags  # Replace with actual tags
+    return jsonify(tags)
 
 
 @app.route('/Templates', methods=['GET'])
@@ -229,6 +261,8 @@ def get_templates():
 
 @app.route('/Jobs/<string:jobUUID>/download', methods=['GET'])
 def download_job(jobUUID):
+    if ActionClass is None:
+        return _jobs_not_supported()
     """
     Download one or more cases from a job in various formats.
     Query params:
