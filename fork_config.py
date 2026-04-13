@@ -9,6 +9,7 @@ Put all fork-specific metadata and class selections in this file.
 svc_name_ = "PILSSAppService"
 svc_display_name_ = "PILSS Flask App Service"
 svc_description_ = "Runs the PILSS Flask app as a Windows service."
+template_tags= ["PILSS"]
 
 from Pilss import PILSSAction, PILSSResults, PILSSOnBottomTemplate, PILSSSchemaTemplate, PILSSDownloadable
 

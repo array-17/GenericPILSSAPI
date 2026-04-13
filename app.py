@@ -40,7 +40,7 @@ if ActionClass is not None:
 @app.route('/', methods=['GET'])
 def index():
     #return static/tester.html
-    return app.send_static_file('tester.html')
+    return app.send_static_file('Interface.html')
 
 @app.route('/NautAPI', methods=['GET'])
 def get_api_meta():

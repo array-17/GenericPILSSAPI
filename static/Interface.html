@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Interface</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: sans-serif; margin: 20px; color: #222; background: #f7f8fa; }
+        h2 { font-size: 1rem; font-weight: 700; margin: 0 0 10px; }
+
+        #builder { display: flex; gap: 20px; margin-bottom: 24px; flex-wrap: wrap; align-items: flex-start; }
+
+        .section {
+            background: #fff; border: 1px solid #ddd; border-radius: 6px;
+            flex: 1 1 280px; padding: 16px; min-width: 280px; max-height: 480px;
+            display: flex; flex-direction: column;
+        }
+
+        #dimensionsContainer, #parametersContainer {
+            overflow-y: auto; flex: 1; min-height: 0;
+        }
+
+        .add-btn {
+            background: #0078d4; color: #fff; border: none;
+            padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.82rem;
+        }
+        .add-btn:hover { background: #005ba1; }
+        .add-btn.sm { font-size: 0.78rem; padding: 3px 8px; margin-top: 6px; }
+
+        .remove-btn {
+            background: none; border: none; color: #b00; cursor: pointer;
+            font-size: 1rem; padding: 1px 5px; line-height: 1; flex-shrink: 0;
+        }
+        .remove-btn:hover { color: #800; }
+
+        /* Dimensions */
+        .dim-card { border: 1px solid #e0e0e0; border-radius: 4px; padding: 10px; margin-top: 10px; background: #fafafa; }
+        .dim-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+        .dim-header input { flex: 1; }
+        .values-list { padding-left: 14px; margin-top: 4px; }
+        .value-row { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
+        .value-row input { flex: 1; }
+        .indent { color: #bbb; font-size: 0.9rem; }
+
+        /* Parameters */
+        .param-card { border: 1px solid #e0e0e0; border-radius: 4px; padding: 10px; margin-top: 10px; background: #fafafa; }
+        .param-header { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .param-header > input { flex: 1; min-width: 120px; }
+        .param-header select {
+            flex: 1; min-width: 130px; border: 1px solid #ccc; border-radius: 3px;
+            padding: 4px 6px; font-size: 0.85rem; background: #fff;
+        }
+        .param-values { padding-left: 14px; margin-top: 8px; border-top: 1px solid #eee; padding-top: 6px; }
+        .param-val-row { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+        .val-label { min-width: 90px; text-align: right; font-size: 0.83rem; color: #555; flex-shrink: 0; }
+        .param-val-row select, .detail-val-row select {
+            flex: 1; border: 1px solid #ccc; border-radius: 3px;
+            padding: 4px 6px; font-size: 0.85rem; background: #fff;
+        }
+
+        /* Shared inputs */
+        input[type="text"] {
+            border: 1px solid #ccc; border-radius: 3px;
+            padding: 4px 7px; font-size: 0.88rem; background: #fff;
+        }
+        input[type="text"]:focus { outline: none; border-color: #0078d4; }
+
+        /* Table */
+        #tableSection { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 16px; }
+        #tableContainer { overflow-x: auto; margin-top: 10px; }
+        table { border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 6px 10px; white-space: nowrap; }
+        .th-dim-label { background: #dbe8fb; font-weight: 600; text-align: left; font-size: 0.85rem; min-width: 150px; }
+        .td-dim-val   { background: #eef3fd; text-align: center; font-size: 0.82rem; color: #333; }
+        .th-param     { background: #f3f3f3; font-weight: 500; text-align: left; font-size: 0.88rem; min-width: 160px; }
+        .td-data { text-align: center; }
+        .td-data input {
+            border: none; background: transparent;
+            width: 100px; text-align: center; font-size: 0.88rem; padding: 2px 4px;
+        }
+        .td-data input:focus { outline: 1px solid #0078d4; border-radius: 2px; background: #fff; }
+        .td-data select {
+            border: 1px solid #ccc; background: #fff; border-radius: 2px;
+            font-size: 0.85rem; padding: 2px 2px; max-width: 150px;
+        }
+        .td-data select:focus { outline: 1px solid #0078d4; }
+        .td-empty { color: #ccc; text-align: center; font-size: 0.85rem; }
+        .hint { color: #999; font-size: 0.85rem; font-style: italic; margin: 0; }
+
+        /* Contextual hint bar */
+        #dimHint {
+            display: flex; align-items: center; gap: 8px;
+            min-height: 26px; margin-top: 8px; margin-bottom: 2px;
+            font-size: 0.8rem; color: #555;
+            transition: opacity 0.15s;
+        }
+        #dimHint:empty { opacity: 0; }
+        .kbd {
+            display: inline-block; background: #eee; border: 1px solid #bbb;
+            border-radius: 3px; padding: 1px 5px; font-size: 0.75rem;
+            font-family: monospace; color: #333; white-space: nowrap;
+        }
+        .hint-sep { color: #ccc; }
+
+        /* Toolbar */
+        #toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 18px; }
+        #toolbar h1 { font-size: 1.1rem; font-weight: 700; margin: 0; flex: 1; }
+        .tool-btn {
+            padding: 6px 16px; border-radius: 4px; border: 1px solid; cursor: pointer; font-size: 0.85rem; font-weight: 500;
+        }
+        .tool-btn.save { background: #107c10; color: #fff; border-color: #0a5e0a; }
+        .tool-btn.save:hover { background: #0a5e0a; }
+        .tool-btn.load { background: #fff; color: #0078d4; border-color: #0078d4; }
+        .tool-btn.load:hover { background: #e8f0fb; }
+
+        /* Modal */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.45); z-index: 100;
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: #fff; border-radius: 8px; padding: 24px; min-width: 340px; max-width: 500px; width: 90%;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        }
+        .modal h3 { margin: 0 0 16px; font-size: 1rem; }
+        .modal input[type="text"] { width: 100%; margin-bottom: 14px; }
+        .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
+        .modal-actions button { padding: 6px 16px; border-radius: 4px; border: none; cursor: pointer; font-size: 0.85rem; }
+        .btn-primary { background: #0078d4; color: #fff; }
+        .btn-primary:hover { background: #005ba1; }
+        .btn-cancel  { background: #e0e0e0; color: #333; }
+        .btn-cancel:hover  { background: #ccc; }
+        .saves-list { max-height: 300px; overflow-y: auto; margin-bottom: 8px; }
+        .save-item {
+            display: flex; align-items: center; gap: 8px; padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .save-item:last-child { border-bottom: none; }
+        .save-name { flex: 1; font-size: 0.9rem; font-weight: 500; }
+        .save-date { font-size: 0.78rem; color: #888; }
+        .btn-load-item { background: #0078d4; color: #fff; border: none; border-radius: 3px; padding: 3px 10px; cursor: pointer; font-size: 0.82rem; }
+        .btn-load-item:hover { background: #005ba1; }
+        .btn-del-item  { background: none; border: none; color: #b00; cursor: pointer; font-size: 1rem; padding: 1px 5px; }
+        .btn-del-item:hover { color: #800; }
+        .no-saves { color: #999; font-style: italic; font-size: 0.88rem; text-align: center; padding: 16px 0; }
+
+        /* Schema load */
+        .param-section-btns { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .add-btn.schema { background: #6b3fa0; }
+        .add-btn.schema:hover { background: #50307a; }
+        .schema-status { display: block; font-size: 0.78rem; margin-top: 5px; min-height: 16px; }
+        .schema-status.ok      { color: #107c10; }
+        .schema-status.warn    { color: #b7640a; }
+        .schema-status.error   { color: #a00; }
+        .schema-status.loading { color: #888; font-style: italic; }
+
+        /* Parameter search */
+        #paramSearch { width: 100%; margin-top: 6px; margin-bottom: 2px; }
+
+        /* Category groups */
+        .param-category { margin-top: 8px; }
+        .param-cat-header {
+            display: flex; align-items: center; gap: 6px;
+            background: #eef3fd; border: 1px solid #c5d8f5; border-radius: 4px;
+            padding: 5px 8px; cursor: pointer; -webkit-user-select: none; user-select: none;
+            font-size: 0.82rem; font-weight: 600; color: #1a4a8a;
+        }
+        .param-cat-header:hover { background: #dbe8fb; }
+        .param-cat-toggle { font-size: 0.65rem; display: inline-block; transition: transform 0.15s; }
+        .param-cat-toggle.collapsed { transform: rotate(-90deg); }
+        .param-cat-count {
+            margin-left: auto; background: #c5d8f5; border-radius: 10px;
+            padding: 1px 7px; font-size: 0.74rem; color: #1a4a8a; font-weight: 500;
+        }
+        .param-cat-body.collapsed { display: none; }
+
+        /* Detail panel */
+        #detailBody { overflow-y: auto; flex: 1; min-height: 0; }
+        .detail-empty { color: #999; font-size: 0.85rem; font-style: italic; text-align: center; padding: 20px 0; }
+        .detail-name { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; word-break: break-all; }
+        .detail-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+        .detail-badge { border-radius: 3px; padding: 2px 7px; font-size: 0.74rem; font-family: monospace; border: 1px solid; }
+        .detail-badge.type { background: #fff3e0; border-color: #f0b44a; color: #7a4900; }
+        .detail-badge.cat  { background: #eef3fd; border-color: #c5d8f5; color: #1a4a8a; }
+        .detail-assign label { font-size: 0.82rem; color: #555; display: block; margin-bottom: 4px; }
+        .detail-assign select { width: 100%; border: 1px solid #ccc; border-radius: 3px; padding: 4px 6px; font-size: 0.85rem; background: #fff; margin-bottom: 10px; }
+        .detail-section-title { font-size: 0.8rem; font-weight: 600; color: #666; margin: 10px 0 5px; border-bottom: 1px solid #eee; padding-bottom: 3px; }
+        .detail-val-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+        .detail-val-label { font-size: 0.82rem; color: #555; min-width: 80px; text-align: right; flex-shrink: 0; }
+        .detail-param-group { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0; }
+        .detail-param-group:last-child { border-bottom: none; }
+        .detail-param-name { font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; color: #333; }
+        /* Selected card highlighting */
+        .param-card.selected { border-color: #0078d4; background: #f0f7ff; }
+        .dim-card.selected   { border-color: #0078d4; background: #f0f7ff; }
+
+        /* Request preview */
+        #previewSection { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 16px; margin-top: 24px; }
+        .preview-header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+        .preview-header h2 { margin: 0; flex-shrink: 0; }
+        .preview-badge {
+            background: #f3f3f3; border: 1px solid #ddd; border-radius: 4px;
+            padding: 2px 8px; font-size: 0.75rem; font-family: monospace; color: #555;
+        }
+        .preview-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-left: auto; }
+        .preview-meta label { font-size: 0.83rem; color: #555; display: flex; align-items: center; gap: 4px; }
+        .preview-meta input { width: 90px; }
+        .tool-btn.submit { background: #107c10; color: #fff; border-color: #0a5e0a; }
+        .tool-btn.submit:hover { background: #0a5e0a; }
+        .tool-btn.submit:disabled { background: #aaa; border-color: #888; cursor: not-allowed; }
+        #previewJson {
+            background: #1e1e1e; color: #d4d4d4; border-radius: 5px;
+            padding: 12px 16px; font-size: 0.82rem; line-height: 1.5;
+            max-height: 420px; overflow: auto; margin: 0;
+            white-space: pre;
+        }
+        #submitStatus { font-size: 0.82rem; margin-top: 6px; min-height: 18px; }
+        #submitStatus.ok    { color: #107c10; }
+        #submitStatus.error { color: #a00; }
+    </style>
+</head>
+<body>
+
+<!-- Toolbar -->
+<div id="toolbar">
+    <h1>Scenario Builder</h1>
+    <button class="tool-btn save" onclick="openSaveDialog()">&#x1F4BE; Save</button>
+    <button class="tool-btn load" onclick="openLoadDialog()">&#x1F4C2; Load</button>
+</div>
+
+<!-- Save modal -->
+<div id="saveModal" class="modal-overlay" onclick="if(event.target===this)closeSaveModal()">
+    <div class="modal">
+        <h3>Save current setup</h3>
+        <input type="text" id="saveNameInput" placeholder="Enter a name for this setup" onkeydown="if(event.key==='Enter')confirmSave()">
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeSaveModal()">Cancel</button>
+            <button class="btn-primary" onclick="confirmSave()">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- Load modal -->
+<div id="loadModal" class="modal-overlay" onclick="if(event.target===this)closeLoadModal()">
+    <div class="modal">
+        <h3>Load a saved setup</h3>
+        <div class="saves-list" id="savesList"></div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeLoadModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<div id="builder">
+    <div class="section">
+        <h2>Parameters</h2>
+        <div class="param-section-btns">
+            <button class="add-btn" onclick="addParameter()">+ Add Parameter</button>
+            <button class="add-btn schema" onclick="loadFromSchema()">&#x2B07; Load from Schema</button>
+        </div>
+        <span id="schemaStatus" class="schema-status"></span>
+        <input type="text" id="paramSearch" placeholder="&#x1F50D; Search parameters&hellip;" oninput="buildParametersUI()">
+        <div id="parametersContainer"></div>
+    </div>
+    <div class="section" id="detailSection">
+        <h2>Details</h2>
+        <div id="detailBody"><p class="detail-empty">Select a parameter or dimension to see details.</p></div>
+    </div>
+    <div class="section">
+        <h2>Dimensions &amp; Values</h2>
+        <button class="add-btn" onclick="addDimension()">+ Add Dimension</button>
+        <div id="dimHint"></div>
+        <div id="dimensionsContainer"></div>
+    </div>
+</div>
+
+<div id="tableSection">
+    <h2>Scenario Table</h2>
+    <div id="tableContainer"><p class="hint">Add dimensions with values and parameters above to build the table.</p></div>
+</div>
+
+<div id="previewSection">
+    <div class="preview-header">
+        <h2>Request Preview</h2>
+        <span class="preview-badge">POST /Jobs/create</span>
+        <div class="preview-meta">
+            <label>projectID <input type="text" id="previewProjectId" value="1" oninput="buildPreview()"></label>
+            <label>revID <input type="text" id="previewRevId" value="1" oninput="buildPreview()"></label>
+            <button class="tool-btn submit" id="submitBtn" onclick="submitJob()">&#x25B6; Submit Job</button>
+        </div>
+    </div>
+    <pre id="previewJson">// Add dimensions, values and parameters above to preview a request.</pre>
+    <div id="submitStatus"></div>
+</div>
+
+<script>
+    /**
+     * Data model:
+     *   dimensions[dimId] = { name: string, values: { valId: string } }
+     *   parameters[paramId] = { name: string, dimId: string|null, values: { valId: string } }
+     *
+     * parameters[p].values[valId] is the single source of truth for each cell.
+     * Inputs in both the Parameters panel and the table share data-param/data-val attributes
+     * so that updateParamValue() can sync them all without a full rebuild.
+     */
+    let dimensions = {};
+    let parameters = {};
+    let pendingFocus = null; // { type: 'dim'|'val', dimId?, valId? }
+    let rebuilding = false;  // guard against blur-triggered double rebuilds
+    const collapsedCategories = new Set(); // tracks which category names are collapsed
+    let selectedItem = null; // { type: 'param'|'dim', id: string } | null
+
+    // ── Utilities ────────────────────────────────────────────────────────────
+    function uid() { return Math.random().toString(36).slice(2, 10); }
+    function esc(s) {
+        return (s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function rebuildAll() {
+        rebuilding = true;
+        buildDimensionsUI();
+        buildParametersUI();
+        buildTable();
+        rebuilding = false;
+        if (pendingFocus) applyFocus();
+        buildPreview();
+        buildDetailPanel();
+    }
+
+    const DIM_HINTS = {
+        dim:     { enter: 'add first value',  tab: 'add first value' },
+        val:     { enter: 'add another value', tab: 'new dimension'   },
+        default: null
+    };
+
+    function setDimHint(type) {
+        const el = document.getElementById('dimHint');
+        if (!el) return;
+        const h = DIM_HINTS[type];
+        if (!h) { el.innerHTML = ''; return; }
+        el.innerHTML =
+            `<kbd class="kbd">Enter</kbd> <span>${h.enter}</span>` +
+            `<span class="hint-sep">&#x2022;</span>` +
+            `<kbd class="kbd">Tab</kbd> <span>${h.tab}</span>`;
+    }
+
+    function applyFocus() {
+        const f = pendingFocus;
+        pendingFocus = null;
+        if (f.type === 'dim') {
+            const el = document.querySelector(`input[data-dimid="${f.dimId}"]`);
+            if (el) el.focus();
+        } else if (f.type === 'val') {
+            const el = document.querySelector(`input[data-valid="${f.valId}"]`);
+            if (el) el.focus();
+        }
+    }
+
+    // ── Dimensions UI ─────────────────────────────────────────────────────────
+    function buildDimensionsUI() {
+        const container = document.getElementById('dimensionsContainer');
+        container.innerHTML = '';
+        for (const dimId of Object.keys(dimensions)) {
+            const dim = dimensions[dimId];
+            const card = document.createElement('div');
+            card.className = 'dim-card' + (selectedItem?.type === 'dim' && selectedItem.id === dimId ? ' selected' : '');
+            card.dataset.dimid = dimId;
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('input, select, button')) return;
+                selectItem('dim', dimId);
+            });
+            card.addEventListener('focusin', () => { if (!(selectedItem?.type === 'dim' && selectedItem.id === dimId)) selectItem('dim', dimId); });
+
+            // Dimension name input — Enter or Tab (when non-empty) → add first value & focus it
+            const dimInput = document.createElement('input');
+            dimInput.type = 'text';
+            dimInput.placeholder = 'Dimension name (e.g. Soil Type)';
+            dimInput.value = dim.name;
+            dimInput.dataset.dimid = dimId;
+            dimInput.addEventListener('input', () => { dimensions[dimId].name = dimInput.value; });
+            dimInput.addEventListener('focus', () => setDimHint('dim'));
+            dimInput.addEventListener('blur',  () => { setDimHint('default'); if (!rebuilding) rebuildAll(); });
+            dimInput.addEventListener('keydown', (e) => {
+                if (e.key !== 'Enter' && e.key !== 'Tab') return;
+                if (!dimInput.value.trim()) return;  // empty → let browser handle normally
+                e.preventDefault();
+                dimensions[dimId].name = dimInput.value;
+                const newValId = uid();
+                dimensions[dimId].values[newValId] = '';
+                pendingFocus = { type: 'val', valId: newValId };
+                rebuildAll();
+            });
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-btn';
+            removeBtn.title = 'Remove dimension';
+            removeBtn.innerHTML = '&#x2715;';
+            removeBtn.addEventListener('click', () => removeDimension(dimId));
+
+            const header = document.createElement('div');
+            header.className = 'dim-header';
+            header.appendChild(dimInput);
+            header.appendChild(removeBtn);
+
+            const addValBtn = document.createElement('button');
+            addValBtn.className = 'add-btn sm';
+            addValBtn.textContent = '+ Add Value';
+            addValBtn.addEventListener('click', () => addValue(dimId));
+
+            const valList = document.createElement('div');
+            valList.className = 'values-list';
+            for (const valId of Object.keys(dim.values)) {
+                const row = document.createElement('div');
+                row.className = 'value-row';
+
+                const indent = document.createElement('span');
+                indent.className = 'indent';
+                indent.innerHTML = '&#x21b3;';
+
+                const valInput = document.createElement('input');
+                valInput.type = 'text';
+                valInput.placeholder = 'Value (e.g. Silt)';
+                valInput.value = dim.values[valId];
+                valInput.dataset.valid = valId;
+                valInput.addEventListener('input', () => { dimensions[dimId].values[valId] = valInput.value; });
+                valInput.addEventListener('focus', () => setDimHint('val'));
+                valInput.addEventListener('blur',  () => { setDimHint('default'); if (!rebuilding) rebuildAll(); });
+                valInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        // Enter → add another value to this dimension
+                        if (!valInput.value.trim()) return;
+                        e.preventDefault();
+                        dimensions[dimId].values[valId] = valInput.value;
+                        const newValId = uid();
+                        dimensions[dimId].values[newValId] = '';
+                        pendingFocus = { type: 'val', valId: newValId };
+                        rebuildAll();
+                    } else if (e.key === 'Tab') {
+                        // Tab → finish this dimension, move to a new dimension
+                        if (!valInput.value.trim()) return;
+                        e.preventDefault();
+                        dimensions[dimId].values[valId] = valInput.value;
+                        const newDimId = uid();
+                        dimensions[newDimId] = { name: '', values: {} };
+                        pendingFocus = { type: 'dim', dimId: newDimId };
+                        rebuildAll();
+                    }
+                });
+
+                const removeValBtn = document.createElement('button');
+                removeValBtn.className = 'remove-btn';
+                removeValBtn.innerHTML = '&#x2715;';
+                removeValBtn.addEventListener('click', () => removeValue(dimId, valId));
+
+                row.appendChild(indent);
+                row.appendChild(valInput);
+                row.appendChild(removeValBtn);
+                valList.appendChild(row);
+            }
+
+            card.appendChild(header);
+            card.appendChild(addValBtn);
+            card.appendChild(valList);
+            container.appendChild(card);
+        }
+    }
+
+    // ── Parameters UI ─────────────────────────────────────────────────────────
+    function buildParamCard(paramId) {
+        const param = parameters[paramId];
+        const card = document.createElement('div');
+        card.className = 'param-card' + (selectedItem?.type === 'param' && selectedItem.id === paramId ? ' selected' : '');
+        card.dataset.paramid = paramId;
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('input, select, button')) return;
+            selectItem('param', paramId);
+        });
+        card.addEventListener('focusin', () => { if (!(selectedItem?.type === 'param' && selectedItem.id === paramId)) selectItem('param', paramId); });
+
+        let dimOptions = '<option value="">-- assign to a dimension --</option>';
+        for (const dimId of Object.keys(dimensions)) {
+            const sel = param.dimId === dimId ? ' selected' : '';
+            dimOptions += `<option value="${dimId}"${sel}>${esc(dimensions[dimId].name) || '(unnamed)'}</option>`;
+        }
+
+        const header = document.createElement('div');
+        header.className = 'param-header';
+        header.innerHTML = `
+            <input type="text" placeholder="Parameter name" value="${esc(param.name)}"
+                oninput="updateParamName('${paramId}', this.value)">
+            <select onchange="assignParamToDim('${paramId}', this.value)">${dimOptions}</select>
+            <button class="remove-btn" onclick="removeParameter('${paramId}')">&#x2715;</button>
+        `;
+        card.appendChild(header);
+        return card;
+    }
+
+    function buildParametersUI() {
+        const container = document.getElementById('parametersContainer');
+        container.innerHTML = '';
+        const searchTerm = (document.getElementById('paramSearch')?.value || '').toLowerCase().trim();
+        const searching = searchTerm.length > 0;
+
+        // Group by category
+        const groups = {};
+        for (const paramId of Object.keys(parameters)) {
+            const cat = parameters[paramId].category || '';
+            if (!groups[cat]) groups[cat] = [];
+            groups[cat].push(paramId);
+        }
+
+        // Sort: named categories alphabetically, '' last
+        const catKeys = Object.keys(groups).sort((a, b) => {
+            if (a === '' && b !== '') return 1;
+            if (a !== '' && b === '') return -1;
+            return a.localeCompare(b);
+        });
+
+        for (const cat of catKeys) {
+            const allIds = groups[cat];
+            const visibleIds = searching
+                ? allIds.filter(id => parameters[id].name.toLowerCase().includes(searchTerm))
+                : allIds;
+            if (searching && visibleIds.length === 0) continue;
+
+            const catLabel = cat || 'Uncategorized';
+            const isCollapsed = collapsedCategories.has(cat) && !searching;
+
+            const catDiv = document.createElement('div');
+            catDiv.className = 'param-category';
+
+            const catHeader = document.createElement('div');
+            catHeader.className = 'param-cat-header';
+            catHeader.innerHTML =
+                `<span class="param-cat-toggle${isCollapsed ? ' collapsed' : ''}">&#x25BC;</span>` +
+                `<span>${esc(catLabel)}</span>` +
+                `<span class="param-cat-count">${visibleIds.length}</span>`;
+            catHeader.addEventListener('click', () => {
+                if (collapsedCategories.has(cat)) collapsedCategories.delete(cat);
+                else collapsedCategories.add(cat);
+                buildParametersUI();
+            });
+
+            const catBody = document.createElement('div');
+            catBody.className = 'param-cat-body' + (isCollapsed ? ' collapsed' : '');
+            for (const paramId of visibleIds) {
+                catBody.appendChild(buildParamCard(paramId));
+            }
+
+            catDiv.appendChild(catHeader);
+            catDiv.appendChild(catBody);
+            container.appendChild(catDiv);
+        }
+    }
+
+    // ── Table ─────────────────────────────────────────────────────────────────
+    function cartesian() {
+        const dimIds = Object.keys(dimensions);
+        let result = [[]];
+        for (const dimId of dimIds) {
+            const valIds = Object.keys(dimensions[dimId].values);
+            if (!valIds.length) continue;
+            const next = [];
+            for (const partial of result)
+                for (const valId of valIds)
+                    next.push([...partial, { dimId, valId }]);
+            result = next;
+        }
+        return result.filter(c => c.length > 0);
+    }
+
+    function buildTable() {
+        const container = document.getElementById('tableContainer');
+        const combos = cartesian();
+        const paramIds = Object.keys(parameters);
+        const activeDimIds = Object.keys(dimensions).filter(d => Object.keys(dimensions[d].values).length > 0);
+
+        if (!combos.length || !paramIds.length) {
+            container.innerHTML = '<p class="hint">Add dimensions with values and parameters above to build the table.</p>';
+            return;
+        }
+
+        const table = document.createElement('table');
+
+        // One header row per dimension
+        for (const dimId of activeDimIds) {
+            const dim = dimensions[dimId];
+            const tr = document.createElement('tr');
+            const th = document.createElement('th');
+            th.className = 'th-dim-label';
+            th.textContent = dim.name || '(unnamed)';
+            tr.appendChild(th);
+            for (const combo of combos) {
+                const entry = combo.find(c => c.dimId === dimId);
+                const td = document.createElement('td');
+                td.className = 'td-dim-val';
+                td.textContent = entry ? (dim.values[entry.valId] || '(unnamed)') : '—';
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+        }
+
+        // One row per parameter (skip unassigned)
+        for (const paramId of paramIds) {
+            const param = parameters[paramId];
+            if (!param.dimId) continue;
+            const tr = document.createElement('tr');
+
+            const th = document.createElement('th');
+            th.className = 'th-param';
+            th.setAttribute('data-paramname', paramId);
+            th.textContent = param.name || '(unnamed)';
+            tr.appendChild(th);
+
+            for (const combo of combos) {
+                const td = document.createElement('td');
+
+                // Find which value of this parameter's dimension is in this column
+                const entry = param.dimId ? combo.find(c => c.dimId === param.dimId) : null;
+
+                if (entry) {
+                    const valId = entry.valId;
+                    td.className = 'td-data';
+                    const ctrl = makeParamValueControl(paramId, valId, param);
+                    td.appendChild(ctrl);
+                } else {
+                    td.className = 'td-empty';
+                    td.textContent = param.dimId ? '—' : '';
+                }
+
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+        }
+
+        container.innerHTML = '';
+        container.appendChild(table);
+    }
+
+    // ── Targeted updates (no rebuild) ─────────────────────────────────────────
+
+    // Update parameter name label in both the params panel header and the table row header
+    function updateParamName(paramId, name) {
+        parameters[paramId].name = name;
+        const th = document.querySelector(`[data-paramname="${paramId}"]`);
+        if (th) th.textContent = name || '(unnamed)';
+    }
+
+    // Update the stored value and sync every matching input/select in both panels
+    function updateParamValue(paramId, valId, value, source) {
+        parameters[paramId].values[valId] = value;
+        document.querySelectorAll(`[data-param="${paramId}"][data-val="${valId}"]`).forEach(el => {
+            if (el !== source) el.value = value;
+        });
+        buildPreview();
+    }
+
+    // Returns a <select> for option-constrained params, or a free <input> otherwise
+    function makeParamValueControl(paramId, valId, param) {
+        if (param.options && Object.keys(param.options).length > 0) {
+            const sel = document.createElement('select');
+            sel.dataset.param = paramId;
+            sel.dataset.val = valId;
+            const blank = document.createElement('option');
+            blank.value = ''; blank.textContent = '— select —';
+            sel.appendChild(blank);
+            for (const [label, optVal] of Object.entries(param.options)) {
+                const opt = document.createElement('option');
+                opt.value = String(optVal);
+                opt.textContent = label;
+                if ((param.values[valId] ?? '') === String(optVal)) opt.selected = true;
+                sel.appendChild(opt);
+            }
+            sel.addEventListener('change', (e) => updateParamValue(paramId, valId, e.target.value, e.target));
+            return sel;
+        } else {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = 'value';
+            input.value = param.values[valId] || '';
+            input.dataset.param = paramId;
+            input.dataset.val = valId;
+            input.addEventListener('input', (e) => updateParamValue(paramId, valId, e.target.value, e.target));
+            return input;
+        }
+    }
+
+    // ── Structural mutations (trigger full rebuild) ────────────────────────────
+    function addDimension()           { dimensions[uid()] = { name: '', values: {} }; rebuildAll(); }
+    function addValue(dimId)          { dimensions[dimId].values[uid()] = ''; rebuildAll(); }
+    function addParameter()           { parameters[uid()] = { name: '', dimId: null, values: {}, schemaType: 'string', category: '', options: null }; rebuildAll(); }
+
+    function removeDimension(dimId) {
+        if (selectedItem?.type === 'dim' && selectedItem.id === dimId) selectedItem = null;
+        delete dimensions[dimId];
+        for (const p of Object.values(parameters)) if (p.dimId === dimId) p.dimId = null;
+        rebuildAll();
+    }
+
+    function removeValue(dimId, valId) {
+        delete dimensions[dimId].values[valId];
+        for (const p of Object.values(parameters)) delete p.values[valId];
+        rebuildAll();
+    }
+
+    function removeParameter(paramId) {
+        if (selectedItem?.type === 'param' && selectedItem.id === paramId) selectedItem = null;
+        delete parameters[paramId]; rebuildAll();
+    }
+
+    function assignParamToDim(paramId, dimId) {
+        parameters[paramId].dimId = dimId || null;
+        rebuildAll();
+    }
+
+    // ── Detail panel ──────────────────────────────────────────────────────────
+    function selectItem(type, id) {
+        if (selectedItem && selectedItem.type === type && selectedItem.id === id) {
+        } else {
+            selectedItem = { type, id };
+        }
+        // Update selected class on all cards without a full rebuild
+        document.querySelectorAll('.param-card[data-paramid]').forEach(el => {
+            el.classList.toggle('selected', !!(selectedItem?.type === 'param' && selectedItem.id === el.dataset.paramid));
+        });
+        document.querySelectorAll('.dim-card[data-dimid]').forEach(el => {
+            el.classList.toggle('selected', !!(selectedItem?.type === 'dim' && selectedItem.id === el.dataset.dimid));
+        });
+        buildDetailPanel();
+    }
+
+    function buildDetailPanel() {
+        const body = document.getElementById('detailBody');
+        if (!body) return;
+        body.innerHTML = '';
+
+        if (!selectedItem) {
+            body.innerHTML = '<p class="detail-empty">Select a parameter or dimension to see details.</p>';
+            return;
+        }
+
+        if (selectedItem.type === 'param') {
+            const paramId = selectedItem.id;
+            const param = parameters[paramId];
+            if (!param) { selectedItem = null; body.innerHTML = '<p class="detail-empty">Parameter not found.</p>'; return; }
+
+            const nameEl = document.createElement('div');
+            nameEl.className = 'detail-name';
+            nameEl.textContent = param.name || '(unnamed)';
+            body.appendChild(nameEl);
+
+            if (param.schemaType || param.category) {
+                const metaEl = document.createElement('div');
+                metaEl.className = 'detail-meta';
+                if (param.schemaType) {
+                    const b = document.createElement('span'); b.className = 'detail-badge type'; b.textContent = param.schemaType; metaEl.appendChild(b);
+                }
+                if (param.category) {
+                    const b = document.createElement('span'); b.className = 'detail-badge cat'; b.textContent = param.category; metaEl.appendChild(b);
+                }
+                body.appendChild(metaEl);
+            }
+
+            const assignDiv = document.createElement('div');
+            assignDiv.className = 'detail-assign';
+            const assignLabel = document.createElement('label');
+            assignLabel.textContent = 'Assign to dimension:';
+            const sel = document.createElement('select');
+            sel.innerHTML = '<option value="">-- none --</option>';
+            for (const dimId of Object.keys(dimensions)) {
+                const opt = document.createElement('option');
+                opt.value = dimId;
+                opt.textContent = dimensions[dimId].name || '(unnamed)';
+                if (param.dimId === dimId) opt.selected = true;
+                sel.appendChild(opt);
+            }
+            sel.addEventListener('change', () => assignParamToDim(paramId, sel.value));
+            assignDiv.appendChild(assignLabel);
+            assignDiv.appendChild(sel);
+            body.appendChild(assignDiv);
+
+            if (param.dimId && dimensions[param.dimId]) {
+                const dim = dimensions[param.dimId];
+                const valKeys = Object.keys(dim.values);
+                if (valKeys.length) {
+                    const title = document.createElement('div');
+                    title.className = 'detail-section-title';
+                    title.textContent = `Values by ${dim.name || 'dimension'}:`;
+                    body.appendChild(title);
+                    for (const valId of valKeys) {
+                        const row = document.createElement('div'); row.className = 'detail-val-row';
+                        const lbl = document.createElement('span'); lbl.className = 'detail-val-label';
+                        lbl.textContent = (dim.values[valId] || '(unnamed)') + ':';
+                        const ctrl = makeParamValueControl(paramId, valId, param);
+                        row.appendChild(lbl); row.appendChild(ctrl); body.appendChild(row);
+                    }
+                }
+            } else {
+                const note = document.createElement('p'); note.className = 'detail-empty'; note.style.textAlign = 'left';
+                note.textContent = 'Assign to a dimension above to enter values.';
+                body.appendChild(note);
+            }
+
+        } else if (selectedItem.type === 'dim') {
+            const dimId = selectedItem.id;
+            const dim = dimensions[dimId];
+            if (!dim) { selectedItem = null; body.innerHTML = '<p class="detail-empty">Dimension not found.</p>'; return; }
+
+            const nameEl = document.createElement('div'); nameEl.className = 'detail-name';
+            nameEl.textContent = dim.name || '(unnamed)'; body.appendChild(nameEl);
+
+            const valKeys = Object.keys(dim.values);
+            if (valKeys.length) {
+                const valTitle = document.createElement('div'); valTitle.className = 'detail-section-title';
+                valTitle.textContent = 'Values:'; body.appendChild(valTitle);
+                for (const valId of valKeys) {
+                    const chip = document.createElement('div');
+                    chip.style.cssText = 'font-size:0.84rem;padding:2px 0;color:#333;';
+                    chip.textContent = '\u2022 ' + (dim.values[valId] || '(unnamed)');
+                    body.appendChild(chip);
+                }
+            }
+
+            const assignedParams = Object.entries(parameters).filter(([, p]) => p.dimId === dimId);
+            const paramTitle = document.createElement('div'); paramTitle.className = 'detail-section-title';
+            paramTitle.textContent = `Assigned parameters (${assignedParams.length}):`;
+            body.appendChild(paramTitle);
+
+            if (!assignedParams.length) {
+                const note = document.createElement('p'); note.className = 'detail-empty'; note.style.textAlign = 'left';
+                note.textContent = 'No parameters assigned to this dimension yet.';
+                body.appendChild(note);
+            } else {
+                for (const [paramId, param] of assignedParams) {
+                    const grp = document.createElement('div'); grp.className = 'detail-param-group';
+                    const pname = document.createElement('div'); pname.className = 'detail-param-name';
+                    pname.textContent = param.name || '(unnamed)'; grp.appendChild(pname);
+                    for (const valId of valKeys) {
+                        const row = document.createElement('div'); row.className = 'detail-val-row';
+                        const lbl = document.createElement('span'); lbl.className = 'detail-val-label';
+                        lbl.textContent = (dim.values[valId] || '(unnamed)') + ':';
+                        const ctrl = makeParamValueControl(paramId, valId, param);
+                        row.appendChild(lbl); row.appendChild(ctrl); grp.appendChild(row);
+                    }
+                    body.appendChild(grp);
+                }
+            }
+        }
+    }
+
+    // ── Schema import ─────────────────────────────────────────────────────
+    async function loadFromSchema() {
+        const statusEl = document.getElementById('schemaStatus');
+        statusEl.textContent = 'Loading…';
+        statusEl.className = 'schema-status loading';
+        try {
+            const res = await fetch('/Jobs/schema');
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const schema = await res.json();
+            const caseProps = schema?.properties?.cases?.items?.properties || {};
+            const keys = Object.keys(caseProps);
+            if (!keys.length) {
+                statusEl.textContent = 'No case properties found in schema.';
+                statusEl.className = 'schema-status warn';
+                return;
+            }
+            const existingNames = new Set(Object.values(parameters).map(p => p.name));
+            let added = 0;
+            for (const key of keys) {
+                if (!existingNames.has(key)) {
+                    const prop = caseProps[key];
+                    const schemaType = prop.type || 'string';
+                    const category = prop['x-Category'] || '';
+                    const options = (prop['Options'] && typeof prop['Options'] === 'object') ? prop['Options'] : null;
+                    parameters[uid()] = { name: key, dimId: null, values: {}, schemaType, category, options };
+                    added++;
+                }
+            }
+            statusEl.textContent = added
+                ? `Loaded ${added} parameter(s) from schema.`
+                : 'Schema loaded — all parameters already present.';
+            statusEl.className = 'schema-status ok';
+            rebuildAll();
+        } catch (e) {
+            statusEl.textContent = `Error: ${e.message}`;
+            statusEl.className = 'schema-status error';
+        }
+    }
+
+    // ── Request preview ─────────────────────────────────────────────────
+    function coerce(val, schemaType) {
+        if (val === '' || val === null || val === undefined) return null;
+        if (schemaType === 'integer') { const n = parseInt(val, 10); return isNaN(n) ? val : n; }
+        if (schemaType === 'number')  { const n = parseFloat(val);    return isNaN(n) ? val : n; }
+        if (schemaType === 'boolean') { return val === 'true' ? true : val === 'false' ? false : val; }
+        return val;
+    }
+
+    function buildPayload() {
+        const combos = cartesian();
+        const paramIds = Object.keys(parameters);
+        const projectID = document.getElementById('previewProjectId')?.value || '1';
+        const revID     = document.getElementById('previewRevId')?.value     || '1';
+
+        const cases = combos.map(combo => {
+            const caseObj = {};
+            for (const paramId of paramIds) {
+                const param = parameters[paramId];
+                if (!param.name) continue;
+                const entry = param.dimId ? combo.find(c => c.dimId === param.dimId) : null;
+                const raw = entry ? (param.values[entry.valId] ?? '') : '';
+                caseObj[param.name] = coerce(raw, param.schemaType || 'string');
+            }
+            return caseObj;
+        });
+        return { projectID, revID, cases };
+    }
+
+    function buildPreview() {
+        const el = document.getElementById('previewJson');
+        if (!el) return;
+        const combos = cartesian();
+        const paramIds = Object.keys(parameters);
+        if (!combos.length || !paramIds.length) {
+            el.textContent = '// Add dimensions with values and parameters above to preview a request.';
+            return;
+        }
+        el.textContent = JSON.stringify(buildPayload(), null, 2);
+    }
+
+    async function submitJob() {
+        const statusEl = document.getElementById('submitStatus');
+        const btn = document.getElementById('submitBtn');
+        const combos = cartesian();
+        if (!combos.length) { statusEl.textContent = 'Add dimensions and values first.'; statusEl.className = 'error'; return; }
+        btn.disabled = true;
+        statusEl.textContent = 'Submitting…';
+        statusEl.className = '';
+        try {
+            const payload = buildPayload();
+            const res = await fetch('/Jobs/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const j = await res.json();
+            if (j.batchUUID) {
+                statusEl.textContent = `✓ Job created — batchUUID: ${j.batchUUID}`;
+                statusEl.className = 'ok';
+            } else {
+                statusEl.textContent = `Response: ${JSON.stringify(j)}`;
+                statusEl.className = 'error';
+            }
+        } catch (e) {
+            statusEl.textContent = `Error: ${e.message}`;
+            statusEl.className = 'error';
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    // ── Save / Load ───────────────────────────────────────────────────────────
+    const LS_KEY = 'pilss_saves';
+
+    function getSaves() {
+        try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; }
+        catch { return {}; }
+    }
+    function putSaves(saves) {
+        localStorage.setItem(LS_KEY, JSON.stringify(saves));
+    }
+
+    function openSaveDialog() {
+        const modal = document.getElementById('saveModal');
+        const input = document.getElementById('saveNameInput');
+        input.value = '';
+        modal.classList.add('open');
+        setTimeout(() => input.focus(), 50);
+    }
+    function closeSaveModal() {
+        document.getElementById('saveModal').classList.remove('open');
+    }
+    function confirmSave() {
+        const name = document.getElementById('saveNameInput').value.trim();
+        if (!name) { document.getElementById('saveNameInput').focus(); return; }
+        const saves = getSaves();
+        saves[name] = {
+            savedAt: new Date().toISOString(),
+            dimensions: JSON.parse(JSON.stringify(dimensions)),
+            parameters: JSON.parse(JSON.stringify(parameters))
+        };
+        putSaves(saves);
+        closeSaveModal();
+    }
+
+    function openLoadDialog() {
+        renderSavesList();
+        document.getElementById('loadModal').classList.add('open');
+    }
+    function closeLoadModal() {
+        document.getElementById('loadModal').classList.remove('open');
+    }
+    function renderSavesList() {
+        const container = document.getElementById('savesList');
+        const saves = getSaves();
+        const names = Object.keys(saves);
+        if (!names.length) {
+            container.innerHTML = '<p class="no-saves">No saved setups yet.</p>';
+            return;
+        }
+        container.innerHTML = '';
+        for (const name of names) {
+            const entry = saves[name];
+            const date = new Date(entry.savedAt).toLocaleString();
+            const row = document.createElement('div');
+            row.className = 'save-item';
+
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'save-name';
+            nameSpan.textContent = name;
+
+            const dateSpan = document.createElement('span');
+            dateSpan.className = 'save-date';
+            dateSpan.textContent = date;
+
+            const loadBtn = document.createElement('button');
+            loadBtn.className = 'btn-load-item';
+            loadBtn.textContent = 'Load';
+            loadBtn.addEventListener('click', () => loadState(name));
+
+            const delBtn = document.createElement('button');
+            delBtn.className = 'btn-del-item';
+            delBtn.title = 'Delete';
+            delBtn.innerHTML = '&#x2715;';
+            delBtn.addEventListener('click', () => deleteSave(name));
+
+            row.appendChild(nameSpan);
+            row.appendChild(dateSpan);
+            row.appendChild(loadBtn);
+            row.appendChild(delBtn);
+            container.appendChild(row);
+        }
+    }
+    function loadState(name) {
+        const saves = getSaves();
+        const entry = saves[name];
+        if (!entry) return;
+        dimensions = JSON.parse(JSON.stringify(entry.dimensions));
+        parameters = JSON.parse(JSON.stringify(entry.parameters));
+        closeLoadModal();
+        rebuildAll();
+    }
+    function deleteSave(name) {
+        const saves = getSaves();
+        delete saves[name];
+        putSaves(saves);
+        renderSavesList();
+    }
+</script>
+
+</body>
+</html>

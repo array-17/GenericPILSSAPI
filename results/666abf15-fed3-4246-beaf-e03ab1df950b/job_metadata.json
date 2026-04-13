@@ -11,7 +11,7 @@
   "cases": [
     {
       "caseNumber": 0,
-      "caseStatus": "Queued",
+      "caseStatus": "Running",
       "case_data": {
         "CalculatedLayFactor_int": {
           "value": 2
@@ -323,7 +323,7 @@
           "value": 0,
           "units": "m"
         },
-        "dateRun": "2026-03-07T11:37:22.610206Z"
+        "dateRun": "2026-04-13T09:09:48.550270Z"
       }
     }
   ]

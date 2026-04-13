@@ -5,7 +5,7 @@ import threading
 import numpy as np
 import os
 import json
-
+###This class handles the actual calling of PILSS
 class PILSSAction(BaseAction):
     def __init__(self, action_data, on_complete=None, case=None):
         self.DLL_Location_64bit = r"C:\\Program Files (x86)\\bin\\x64\\PILSS_DLL.dll"
@@ -926,7 +926,8 @@ class PILSSAction(BaseAction):
                     }
                 },
                 "required": []
-            }return schema
+            }
+            return schema
 
     def perform_action(self) -> Dict[str, Any]:
             def create_fortran_string_buffer(py_string):
